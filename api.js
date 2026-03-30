@@ -1,4 +1,4 @@
-const pichuginIvan = "prod"; // Замени на свой ник, например "ivan-ivanov"
+const pichuginIvan = "prod";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${pichuginIvan}/instapro`;
 

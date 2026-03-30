@@ -48,7 +48,7 @@ export function renderPostsPageComponent({ appEl }) {
       const isLiked = likeBtn.dataset.liked === "true";
       const action = isLiked ? removeLike : setLike;
 
-      action({ token: getToken(), postId }).then(() => goToPage(window.location.hash || "posts")); // Перерисовываем текущую страницу
+      action({ token: getToken(), postId }).then(() => goToPage(window.location.hash || "posts")); 
     });
   }
 }
