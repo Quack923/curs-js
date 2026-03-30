@@ -32,14 +32,14 @@ export function renderPostsPageComponent({ appEl }) {
 
   renderHeaderComponent({ element: document.querySelector(".header-container") });
 
-  // Переход в профиль
+  
   for (let userEl of document.querySelectorAll(".post-header")) {
     userEl.addEventListener("click", () => {
       goToPage(USER_POSTS_PAGE, { userId: userEl.dataset.userId });
     });
   }
 
-  // Логика лайков
+  
   for (let likeBtn of document.querySelectorAll(".like-button")) {
     likeBtn.addEventListener("click", () => {
       if (!user) return alert("Авторизуйтесь, чтобы ставить лайки");
