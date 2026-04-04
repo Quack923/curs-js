@@ -1,6 +1,6 @@
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken, user } from "../index.js";
-import { USER_POSTS_PAGE } from "../routes.js";
+import { USER_POSTS_PAGE, POSTS_PAGE } from "../routes.js";
 import { setLike, removeLike } from "../api.js";
 
 export function renderPostsPageComponent({ appEl }) {
@@ -32,23 +32,27 @@ export function renderPostsPageComponent({ appEl }) {
 
   renderHeaderComponent({ element: document.querySelector(".header-container") });
 
-  
   for (let userEl of document.querySelectorAll(".post-header")) {
     userEl.addEventListener("click", () => {
       goToPage(USER_POSTS_PAGE, { userId: userEl.dataset.userId });
     });
   }
 
-  
   for (let likeBtn of document.querySelectorAll(".like-button")) {
-    likeBtn.addEventListener("click", () => {
+    likeBtn.addEventListener("click", (event) => {
+      event.stopPropagation();
       if (!user) return alert("Авторизуйтесь, чтобы ставить лайки");
-      
+
       const postId = likeBtn.dataset.postId;
       const isLiked = likeBtn.dataset.liked === "true";
       const action = isLiked ? removeLike : setLike;
 
-      action({ token: getToken(), postId }).then(() => goToPage(window.location.hash || "posts")); 
+      action({ token: getToken(), postId }).then(() => {
+        const page = window.location.hash.includes("user-posts") ? USER_POSTS_PAGE : POSTS_PAGE;
+        const post = posts.find((p) => p.id === postId);
+        
+        goToPage(page, { userId: post.user.id });
+      });
     });
   }
 }
