@@ -10,6 +10,10 @@ export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
+export const setPosts = (newPosts) => {
+  posts = newPosts;
+};
+
 export const getToken = () => (user ? `Bearer ${user.token}` : undefined);
 
 export const logout = () => {
@@ -22,6 +26,7 @@ export const goToPage = (newPage, data) => {
   if (newPage === POSTS_PAGE) {
     page = LOADING_PAGE;
     renderApp();
+
     return getPosts({ token: getToken() })
       .then((newPosts) => {
         posts = newPosts;
@@ -33,6 +38,7 @@ export const goToPage = (newPage, data) => {
   if (newPage === USER_POSTS_PAGE) {
     page = LOADING_PAGE;
     renderApp();
+
     return getUserPosts({ token: getToken(), userId: data.userId })
       .then((newPosts) => {
         posts = newPosts;
@@ -41,18 +47,16 @@ export const goToPage = (newPage, data) => {
       });
   }
 
-  if (newPage === ADD_POSTS_PAGE) {
-    page = user ? ADD_POSTS_PAGE : AUTH_PAGE;
-    return renderApp();
-  }
-
   page = newPage;
   renderApp();
 };
 
-const renderApp = () => {
+export const renderApp = () => {
   const appEl = document.getElementById("app");
-  if (page === LOADING_PAGE) return renderLoadingPageComponent({ appEl, user, goToPage });
+
+  if (page === LOADING_PAGE) {
+    return renderLoadingPageComponent({ appEl, user, goToPage });
+  }
 
   if (page === AUTH_PAGE) {
     return renderAuthPageComponent({
@@ -61,7 +65,7 @@ const renderApp = () => {
         user = newUser;
         saveUserToLocalStorage(user);
         goToPage(POSTS_PAGE);
-      }
+      },
     });
   }
 
@@ -80,6 +84,5 @@ const renderApp = () => {
     return renderPostsPageComponent({ appEl });
   }
 };
-
 
 goToPage(POSTS_PAGE);
